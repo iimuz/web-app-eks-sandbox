@@ -80,18 +80,6 @@ function main() {
     case $1 in
     build)
       "${DOCKER_BASE_CMD[@]}" --profile dev build
-      "${DOCKER_BASE_CMD[@]}" --profile tool build
-      break
-      ;;
-    nvim)
-      local -ar NEOVIM_ENV_VARS=(
-        NVIM_CONFIG_DIR="${NVIM_CONFIG_DIR:-'/tmp/nvim'}"
-      )
-      env "${NEOVIM_ENV_VARS[@]}" "${DOCKER_BASE_CMD[@]}" run --rm -it nvim nvim
-      break
-      ;;
-    rshell)
-      "${DOCKER_BASE_CMD[@]}" run --rm -it remote-dev bash
       break
       ;;
     shell)
