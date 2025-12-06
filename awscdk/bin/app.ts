@@ -15,7 +15,9 @@ if (stageName === "prod") {
 } else if (stageName === "dev") {
   config = devConfig;
 } else {
-  throw new Error(`Unknown stage: ${stageName}. Please specify 'dev' or 'prod'.`);
+  throw new Error(
+    `Unknown stage: ${stageName}. Please specify 'dev' or 'prod'.`,
+  );
 }
 
 new WebAppEksSandboxStage(app, stageName, {
