@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "rsbuild build",
-    "dev": "rsbuild dev --open",
+    "dev": "rsbuild dev --host 0.0.0.0 --port 3000",
     "deploy": "bash deploy.sh",
     "destroy": "bash destroy.sh",
     "format": "prettier --write .",

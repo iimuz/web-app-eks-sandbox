@@ -11,18 +11,59 @@ services:
       - $PWD:/workspace
       - cache-node:/workspace/node_modules
       - cache-mise:/home/ubuntu/.cache/mise
-      - $PWD//.aws:/home/ubuntu/.aws
+      - $PWD//.aws:/home/ubuntu/.aws:ro
     environment:
       - GITHUB_TOKEN=${GITHUB_TOKEN:-""}
       - MISE_TRUSTED_CONFIG_PATHS=/workspace
+    networks:
+      - public_net
     working_dir: /workspace
     user: ubuntu
-    tty: true
-    stdin_open: true
     profiles:
       - dev
+    tty: true
+    stdin_open: true
+
+  traefik:
+    image: traefik:v3.6.4
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:8000"
+    ports:
+      - "127.0.0.1:8000:8000"
+      - "127.0.0.1:8081:8080" # Traefik Dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - public_net
+      - internal_net
+
+  console:
+    image: web-app-eks-sandbox-base:latest
+    working_dir: /workspace/console
+    command: npm run dev
+    volumes:
+      - .:/workspace
+      - cache-node:/workspace/node_modules
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.console.rule=Host(`localhost`)"
+      - "traefik.http.routers.console.entrypoints=web"
+      - "traefik.http.services.console.loadbalancer.server.port=3000"
+      - "traefik.docker.network=internal_net"
+    networks:
+      - internal_net
+    user: ubuntu
 
 volumes:
   # cache
   cache-mise:
   cache-node:
+
+networks:
+  public_net:
+    driver: bridge
+  internal_net:
+    driver: bridge
+    internal: true
