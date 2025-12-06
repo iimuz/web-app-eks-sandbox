@@ -1,0 +1,61 @@
+services:
+  dev:
+    image: web-app-eks-sandbox-base:latest
+    build:
+      context: ./docker/base
+      dockerfile: Dockerfile
+      args:
+        - UID=${USER_UID:-1000}
+        - GID=${USER_GID:-1000}
+    volumes:
+      - workspace:/workspace
+      # cache
+      - mise-cache:/home/ubuntu/.cache/mise
+      # aws credentials
+      - aws:/home/ubuntu/.aws
+    environment:
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-""}
+      - MISE_TRUSTED_CONFIG_PATHS=/workspace
+    working_dir: /workspace
+    user: ubuntu
+    tty: true
+    stdin_open: true
+    profiles:
+      - dev
+
+  # tools
+  nvim:
+    image: web-app-eks-sandbox-nvim:latest
+    build:
+      context: ./docker/nvim
+      dockerfile: Dockerfile
+      args:
+        - UID=${USER_UID:-1000}
+        - GID=${USER_GID:-1000}
+    volumes:
+      - workspace:/workspace
+      # cache
+      - mise-cache:/home/ubuntu/.cache/mise
+      # neovim 設定
+      - $NVIM_CONFIG_DIR:/home/ubuntu/.config/nvim:rw
+      - nvim-lazy:/home/ubuntu/.local/share/nvim/lazy
+      - nvim-mason:/home/ubuntu/.local/share/nvim/mason
+      - $HOME/.config/github-copilot:/home/ubuntu/.config/github-copilot:ro
+    environment:
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-""}
+      - MISE_TRUSTED_CONFIG_PATHS=/workspace
+    working_dir: /workspace
+    user: ubuntu
+    tty: true
+    stdin_open: true
+    profiles:
+      - tool
+
+volumes:
+  # credentials
+  aws:
+  # cache
+  mise-cache:
+  nvim-lazy:
+  nvim-mason:
+  workspace:

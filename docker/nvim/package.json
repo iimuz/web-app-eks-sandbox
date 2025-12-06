@@ -1,0 +1,12 @@
+{
+  "name": "web-app-eks-sandbox-nvim",
+  "version": "1.0.0",
+  "author": "",
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "@aikidosec/safe-chain": "^1.0.24",
+    "mcp-hub": "^4.2.1",
+    "neovim": "^5.4.0"
+  }
+}
