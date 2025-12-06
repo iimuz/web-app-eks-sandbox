@@ -83,6 +83,10 @@ function main() {
       "${DOCKER_BASE_CMD[@]}" --profile tool build
       break
       ;;
+    copilot)
+      "${DOCKER_BASE_CMD[@]}" run --rm -it copilot
+      break
+      ;;
     nvim)
       local -ar NEOVIM_ENV_VARS=(
         NVIM_CONFIG_DIR="${NVIM_CONFIG_DIR:-'/tmp/nvim'}"

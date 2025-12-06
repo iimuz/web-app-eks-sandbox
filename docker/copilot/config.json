@@ -1,0 +1,8 @@
+{
+  "banner": "never",
+  "model": "gemini-3-pro",
+  "render_markdown": true,
+  "screen_reader": false,
+  "theme": "auto",
+  "trusted_folders": ["/workspace"]
+}
