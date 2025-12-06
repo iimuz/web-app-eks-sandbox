@@ -1,0 +1,16 @@
+{
+  "name": "web-app-eks-sandbox",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Experimental environment for web app infrastructure on AWS EKS",
+  "workspaces": ["awscdk", "console"],
+  "scripts": {
+    "build": "npm run build --workspace=console",
+    "dev": "npm run dev --workspace=console",
+    "deploy": "npm run deploy --workspace=awscdk",
+    "diff": "npm run diff --workspace=awscdk",
+    "synth": "npm run synth --workspace=awscdk"
+  },
+  "author": "",
+  "license": "MIT"
+}
