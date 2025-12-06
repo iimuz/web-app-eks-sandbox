@@ -15,21 +15,20 @@ import * as path from "path"; // Import path module
 
 export interface CoreConstructProps {
   readonly consoleBucket: s3.IBucket;
+  readonly allowedIpAddresses: string[];
+  readonly allowedIpv6Addresses: string[];
 }
 
 export class CoreConstruct extends Construct {
   constructor(scope: Construct, id: string, props: CoreConstructProps) {
     super(scope, id);
 
-    const { consoleBucket } = props;
+    const { consoleBucket, allowedIpAddresses, allowedIpv6Addresses } = props;
     const stackName = cdk.Stack.of(this).stackName;
 
     // ========================================
     // WAF & IP Set Configuration
     // ========================================
-    const allowedIpAddresses: string[] = []; // Add IPs if needed
-    const allowedIpv6Addresses: string[] = []; // Add IPs if needed
-
     const ipSet =
       allowedIpAddresses.length > 0
         ? new wafv2.CfnIPSet(this, "AllowedIPSet", {
@@ -66,6 +65,23 @@ export class CoreConstruct extends Construct {
                   sampledRequestsEnabled: true,
                   cloudWatchMetricsEnabled: true,
                   metricName: "AllowSpecificIPsRule",
+                },
+              },
+            ]
+          : []),
+        ...(ipSetV6
+          ? [
+              {
+                name: "AllowSpecificIPv6s",
+                priority: 2,
+                statement: {
+                  ipSetReferenceStatement: { arn: ipSetV6.attrArn },
+                },
+                action: { allow: {} },
+                visibilityConfig: {
+                  sampledRequestsEnabled: true,
+                  cloudWatchMetricsEnabled: true,
+                  metricName: "AllowSpecificIPv6sRule",
                 },
               },
             ]

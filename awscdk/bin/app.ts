@@ -1,17 +1,27 @@
 #!/usr/bin/env node
 import * as cdk from "aws-cdk-lib";
-import { WebAppEksSandboxStack } from "../lib/web-app-eks-sandbox-stack";
+import { devConfig } from "../config/dev";
+import { prodConfig } from "../config/prod";
+import { Config } from "../lib/types";
+import { WebAppEksSandboxStage } from "../lib/web-app-eks-sandbox-stage";
 
 const app = new cdk.App();
 
-// Determine the stage from environment variables, defaulting to 'dev'
-const stage = process.env.STAGE || "dev";
-const stackName = `WebAppEksSandbox-${stage}`;
+const stageName = app.node.tryGetContext("stage") || "dev"; // Default to 'dev'
 
-new WebAppEksSandboxStack(app, stackName, {
+let config: Config;
+if (stageName === "prod") {
+  config = prodConfig;
+} else if (stageName === "dev") {
+  config = devConfig;
+} else {
+  throw new Error(`Unknown stage: ${stageName}. Please specify 'dev' or 'prod'.`);
+}
+
+new WebAppEksSandboxStage(app, stageName, {
   env: {
-    account: process.env.CDK_DEFAULT_ACCOUNT,
-    region: "us-east-1", // us-east-1 is required for CloudFront + WAF
+    account: config.awsAccount,
+    region: config.awsRegion,
   },
-  description: `Web App EKS Sandbox stack for the ${stage} environment.`,
+  config,
 });
