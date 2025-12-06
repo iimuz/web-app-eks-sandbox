@@ -1,6 +1,6 @@
-import * as cdk from 'aws-cdk-lib';
-import * as s3 from 'aws-cdk-lib/aws-s3';
-import { Construct } from 'constructs';
+import * as cdk from "aws-cdk-lib";
+import * as s3 from "aws-cdk-lib/aws-s3";
+import { Construct } from "constructs";
 
 export class ConsoleConstruct extends Construct {
   public readonly bucket: s3.IBucket;
@@ -11,7 +11,7 @@ export class ConsoleConstruct extends Construct {
     // ========================================
     // S3 Bucket for Console
     // ========================================
-    this.bucket = new s3.Bucket(this, 'WebsiteBucket', {
+    this.bucket = new s3.Bucket(this, "WebsiteBucket", {
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
       encryption: s3.BucketEncryption.S3_MANAGED,
       versioned: false,
@@ -22,9 +22,9 @@ export class ConsoleConstruct extends Construct {
     // ========================================
     // Outputs
     // ========================================
-    new cdk.CfnOutput(this, 'BucketName', {
+    new cdk.CfnOutput(this, "BucketName", {
       value: this.bucket.bucketName,
-      description: 'S3 bucket name for console files',
+      description: "S3 bucket name for console files",
     });
   }
 }
