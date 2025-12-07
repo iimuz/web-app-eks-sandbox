@@ -8,23 +8,12 @@ export class ConsoleConstruct extends Construct {
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
-    // ========================================
-    // S3 Bucket for Console
-    // ========================================
-    this.bucket = new s3.Bucket(this, "WebsiteBucket", {
+    this.bucket = new s3.Bucket(this, "ConsoleBucket", {
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
       encryption: s3.BucketEncryption.S3_MANAGED,
       versioned: false,
       removalPolicy: cdk.RemovalPolicy.DESTROY, // For sample only
       autoDeleteObjects: true, // For sample only
-    });
-
-    // ========================================
-    // Outputs
-    // ========================================
-    new cdk.CfnOutput(this, "BucketName", {
-      value: this.bucket.bucketName,
-      description: "S3 bucket name for console files",
     });
   }
 }

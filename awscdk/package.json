@@ -6,9 +6,9 @@
     "build": "tsc",
     "watch": "tsc -w",
     "cdk": "cdk",
-    "deploy": "cdk deploy --require-approval=never",
+    "deploy": "cdk deploy --require-approval=never --stage=Dev",
     "diff": "cdk diff",
-    "synth": "cdk synth",
+    "synth": "cdk synth --stage=Dev",
     "destroy": "cdk destroy"
   },
   "devDependencies": {

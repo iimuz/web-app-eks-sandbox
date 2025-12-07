@@ -1,10 +1,10 @@
 import * as cdk from "aws-cdk-lib";
 import * as wafv2 from "aws-cdk-lib/aws-wafv2";
 import { Construct } from "constructs";
-import { Config } from "../../types";
 
 export interface WafConstructProps {
-  readonly config: Config;
+  readonly allowedIpAddresses: string[];
+  readonly allowedIpv6Addresses: string[];
 }
 
 export class WafConstruct extends Construct {
@@ -13,29 +13,28 @@ export class WafConstruct extends Construct {
   constructor(scope: Construct, id: string, props: WafConstructProps) {
     super(scope, id);
 
-    const { config } = props;
     const stackName = cdk.Stack.of(this).stackName;
 
     // ========================================
     // WAF & IP Set Configuration
     // ========================================
     const ipSet =
-      config.allowedIpAddresses.length > 0
+      props.allowedIpAddresses.length > 0
         ? new wafv2.CfnIPSet(this, "AllowedIPSet", {
             name: `${stackName}-allowed-ips`,
             scope: "CLOUDFRONT",
             ipAddressVersion: "IPV4",
-            addresses: config.allowedIpAddresses,
+            addresses: props.allowedIpAddresses,
           })
         : undefined;
 
     const ipSetV6 =
-      config.allowedIpv6Addresses.length > 0
+      props.allowedIpv6Addresses.length > 0
         ? new wafv2.CfnIPSet(this, "AllowedIPSetV6", {
             name: `${stackName}-allowed-ips-v6`,
             scope: "CLOUDFRONT",
             ipAddressVersion: "IPV6",
-            addresses: config.allowedIpv6Addresses,
+            addresses: props.allowedIpv6Addresses,
           })
         : undefined;
 
