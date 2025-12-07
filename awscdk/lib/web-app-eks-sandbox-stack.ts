@@ -1,7 +1,7 @@
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
 import { ConsoleConstruct } from "./constructs/console";
-import { CoreConstruct } from "./constructs/core";
+import { CoreConstruct } from "./constructs/core/core";
 import { WebAppEksSandboxStackProps } from "./types";
 
 export interface WebAppEksSandboxAppStackProps extends WebAppEksSandboxStackProps {
