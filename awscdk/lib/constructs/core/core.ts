@@ -1,8 +1,12 @@
+import * as path from "path";
 import * as cdk from "aws-cdk-lib";
 import {
   Distribution,
   ViewerProtocolPolicy,
   AllowedMethods,
+  Function,
+  FunctionCode,
+  FunctionEventType,
 } from "aws-cdk-lib/aws-cloudfront";
 import * as origins from "aws-cdk-lib/aws-cloudfront-origins";
 import * as s3 from "aws-cdk-lib/aws-s3";
@@ -21,6 +25,12 @@ export class CoreConstruct extends Construct {
     const { consoleBucket, webAclArn } = props;
     const stackName = cdk.Stack.of(this).stackName;
 
+    const basicAuthFunction = new Function(this, "BasicAuthFunction", {
+      code: FunctionCode.fromFile({
+        filePath: path.join(__dirname, "../../../assets/functions/basic-auth.js"),
+      }),
+    });
+
     // ========================================
     // CloudFront Distribution
     // ========================================
@@ -36,6 +46,12 @@ export class CoreConstruct extends Construct {
           origin: origins.S3BucketOrigin.withOriginAccessControl(consoleBucket),
           viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
           allowedMethods: AllowedMethods.ALLOW_GET_HEAD,
+          functionAssociations: [
+            {
+              function: basicAuthFunction,
+              eventType: FunctionEventType.VIEWER_REQUEST,
+            },
+          ],
         },
       },
       errorResponses: [
