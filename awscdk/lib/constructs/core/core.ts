@@ -6,6 +6,7 @@ import {
 } from "aws-cdk-lib/aws-cloudfront";
 import * as origins from "aws-cdk-lib/aws-cloudfront-origins";
 import * as s3 from "aws-cdk-lib/aws-s3";
+import * as ssm from "aws-cdk-lib/aws-ssm";
 import { Construct } from "constructs";
 
 export interface CoreConstructProps {
@@ -27,7 +28,7 @@ export class CoreConstruct extends Construct {
       comment: `Distribution for ${stackName}`,
       defaultRootObject: "index.html",
       defaultBehavior: {
-        origin: new origins.HttpOrigin("invalid.example.com"),
+        origin: origins.S3BucketOrigin.withOriginAccessControl(consoleBucket),
         viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
       },
       additionalBehaviors: {
@@ -41,12 +42,12 @@ export class CoreConstruct extends Construct {
         {
           httpStatus: 403,
           responseHttpStatus: 200,
-          responsePagePath: "/index.html",
+          responsePagePath: "/console/index.html",
         },
         {
           httpStatus: 404,
           responseHttpStatus: 200,
-          responsePagePath: "/index.html",
+          responsePagePath: "/console/index.html",
         },
       ],
       webAclId: webAclArn,
@@ -63,6 +64,12 @@ export class CoreConstruct extends Construct {
     });
     new cdk.CfnOutput(this, "WebsiteURL", {
       value: `https://${distribution.distributionDomainName}`,
+    });
+
+    const stageName = cdk.Stage.of(this)?.stageName.toLowerCase() || "dev";
+    new ssm.StringParameter(this, "DistributionIdParam", {
+      parameterName: `/${stageName}/service/console/distribution-id`,
+      stringValue: distribution.distributionId,
     });
   }
 }

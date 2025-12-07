@@ -1,5 +1,6 @@
 import * as cdk from "aws-cdk-lib";
 import * as s3 from "aws-cdk-lib/aws-s3";
+import * as ssm from "aws-cdk-lib/aws-ssm";
 import { Construct } from "constructs";
 
 export class ConsoleConstruct extends Construct {
@@ -19,6 +20,12 @@ export class ConsoleConstruct extends Construct {
     new cdk.CfnOutput(this, "BucketName", {
       value: this.bucket.bucketName,
       description: "S3 bucket name for console files",
+    });
+
+    const stageName = cdk.Stage.of(this)?.stageName.toLowerCase() || "dev";
+    new ssm.StringParameter(this, "BucketNameParam", {
+      parameterName: `/${stageName}/service/console/bucket-name`,
+      stringValue: this.bucket.bucketName,
     });
   }
 }
