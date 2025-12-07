@@ -15,5 +15,10 @@ export class ConsoleConstruct extends Construct {
       removalPolicy: cdk.RemovalPolicy.DESTROY, // For sample only
       autoDeleteObjects: true, // For sample only
     });
+
+    new cdk.CfnOutput(this, "BucketName", {
+      value: this.bucket.bucketName,
+      description: "S3 bucket name for console files",
+    });
   }
 }
