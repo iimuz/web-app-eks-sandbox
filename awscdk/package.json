@@ -6,15 +6,16 @@
     "build": "tsc",
     "watch": "tsc -w",
     "cdk": "cdk",
-    "deploy": "cdk deploy --require-approval=never",
+    "deploy": "cdk deploy \"**\" --require-approval=never --stage=Dev",
     "diff": "cdk diff",
-    "synth": "cdk synth",
+    "synth": "cdk synth --stage=Dev",
     "destroy": "cdk destroy"
   },
   "devDependencies": {
     "@types/node": "^22.10.5",
     "aws-cdk": "^2.174.2",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3"
   },
   "dependencies": {

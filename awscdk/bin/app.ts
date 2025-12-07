@@ -1,13 +1,23 @@
 #!/usr/bin/env node
-import * as cdk from 'aws-cdk-lib';
-import { StaticSiteStack } from '../lib/static-site-stack';
+import * as cdk from "aws-cdk-lib";
+
+import { SandboxStage, SandboxStageProps } from "@/lib/stages/stage";
+import { devStageProps } from "@/lib/stages/devProps";
+import { prodStageProps } from "@/lib/stages/prodProps";
 
 const app = new cdk.App();
 
-new StaticSiteStack(app, 'StaticSiteStack', {
-  env: {
-    account: process.env.CDK_DEFAULT_ACCOUNT,
-    region: 'us-east-1', // us-east-1 required for CloudFront + WAF
-  },
-  description: 'Static site hosting with S3 + CloudFront + WAF',
-});
+const stageName = app.node.tryGetContext("stage") || "Dev"; // Default to 'Dev'
+
+let stageProps: SandboxStageProps;
+if (stageName === "Prod") {
+  stageProps = prodStageProps;
+} else if (stageName === "Dev") {
+  stageProps = devStageProps;
+} else {
+  throw new Error(
+    `Unknown stage: ${stageName}. Please specify 'Dev' or 'Prod'.`,
+  );
+}
+
+new SandboxStage(app, stageName, stageProps);
