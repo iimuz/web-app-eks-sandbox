@@ -38,44 +38,38 @@ export class WafConstruct extends Construct {
           })
         : undefined;
 
+    // Build OR statement for allowed IPs (IPv4 and/or IPv6)
+    const ipStatements: wafv2.CfnWebACL.StatementProperty[] = [];
+    if (ipSet) {
+      ipStatements.push({ ipSetReferenceStatement: { arn: ipSet.attrArn } });
+    }
+    if (ipSetV6) {
+      ipStatements.push({ ipSetReferenceStatement: { arn: ipSetV6.attrArn } });
+    }
+
     const webAcl = new wafv2.CfnWebACL(this, "WebACL", {
       name: `${stackName}-webacl`,
       scope: "CLOUDFRONT",
-      defaultAction: { allow: {} },
-      rules: [
-        ...(ipSet
+      defaultAction: { block: {} },
+      rules:
+        ipStatements.length > 0
           ? [
               {
-                name: "AllowSpecificIPs",
+                name: "AllowWhitelistedIPs",
                 priority: 1,
-                statement: { ipSetReferenceStatement: { arn: ipSet.attrArn } },
+                statement:
+                  ipStatements.length === 1
+                    ? ipStatements[0]
+                    : { orStatement: { statements: ipStatements } },
                 action: { allow: {} },
                 visibilityConfig: {
                   sampledRequestsEnabled: true,
                   cloudWatchMetricsEnabled: true,
-                  metricName: "AllowSpecificIPsRule",
+                  metricName: "AllowWhitelistedIPsRule",
                 },
               },
             ]
-          : []),
-        ...(ipSetV6
-          ? [
-              {
-                name: "AllowSpecificIPv6s",
-                priority: 2,
-                statement: {
-                  ipSetReferenceStatement: { arn: ipSetV6.attrArn },
-                },
-                action: { allow: {} },
-                visibilityConfig: {
-                  sampledRequestsEnabled: true,
-                  cloudWatchMetricsEnabled: true,
-                  metricName: "AllowSpecificIPv6sRule",
-                },
-              },
-            ]
-          : []),
-      ],
+          : [],
       visibilityConfig: {
         sampledRequestsEnabled: true,
         cloudWatchMetricsEnabled: true,
