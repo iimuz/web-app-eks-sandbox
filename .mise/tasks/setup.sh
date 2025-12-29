@@ -73,6 +73,8 @@ function main() {
       ;;
     esac
   done
+
+  pnpm install --frozen-lockfile
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
