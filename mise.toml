@@ -1,4 +1,6 @@
 [tools]
+node = "22"
+pnpm = "10"
 
 [env]
 mise.file = ".env"
