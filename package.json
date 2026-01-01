@@ -3,13 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "description": "Experimental environment for web app infrastructure on AWS EKS",
-  "scripts": {
-    "build": "pnpm --filter console build",
-    "dev": "pnpm --filter console dev",
-    "deploy": "pnpm --filter awscdk deploy",
-    "diff": "pnpm --filter awscdk diff",
-    "synth": "pnpm --filter awscdk synth"
-  },
   "author": "",
   "license": "MIT",
   "devDependencies": {

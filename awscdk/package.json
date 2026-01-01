@@ -2,16 +2,6 @@
   "name": "awscdk",
   "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "lint": "eslint .",
-    "build": "tsc",
-    "watch": "tsc -w",
-    "cdk": "cdk",
-    "deploy": "cdk deploy \"**\" --require-approval=never --stage=Dev",
-    "diff": "cdk diff",
-    "synth": "cdk synth --stage=Dev",
-    "destroy": "cdk destroy"
-  },
   "dependencies": {
     "aws-cdk-lib": "^2.174.2",
     "constructs": "^10.4.2"
