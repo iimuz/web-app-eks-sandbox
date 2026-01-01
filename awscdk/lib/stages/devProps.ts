@@ -1,5 +1,5 @@
-import { SandboxStageProps } from "./stage";
-import { defaultStageProps } from "./defaultProps";
+import { SandboxStageProps } from './stage';
+import { defaultStageProps } from './defaultProps';
 
 export const devStageProps: SandboxStageProps = {
   ...defaultStageProps,

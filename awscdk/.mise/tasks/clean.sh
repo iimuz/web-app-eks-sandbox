@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#MISE description="Setup repository settings."
+#MISE description="Cleanup repository settings."
 
 set -E -e -u -o pipefail
 
@@ -41,14 +41,14 @@ function usage() {
 Usage: ${SCRIPT_NAME} [OPTIONS]
 
 Description:
-    Setup repository settings.
+    Cleanup repository settings.
 
 OPTIONS:
     -h, --help      Show this help message
     -v, --verbose   Enable verbose output (set -x)
 
 EXAMPLES:
-    ${SCRIPT_NAME}              # Run full setup
+    ${SCRIPT_NAME}              # Run full cleanup
     ${SCRIPT_NAME} --verbose    # Run with verbose output
     ${SCRIPT_NAME} --help       # Show this help
 EOF
@@ -74,8 +74,8 @@ function main() {
     esac
   done
 
-  pnpm install --frozen-lockfile
-  pnpm exec lefthook install
+  rm -r cdk.out/
+  rm -r node_modules/
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then

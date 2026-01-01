@@ -1,6 +1,6 @@
-import * as cdk from "aws-cdk-lib";
-import { Construct } from "constructs";
-import { WafConstruct } from "@/lib/constructs/core/waf";
+import * as cdk from 'aws-cdk-lib';
+import { Construct } from 'constructs';
+import { WafConstruct } from '@/lib/constructs/core/waf';
 
 export interface WafStackProps extends cdk.StackProps {
   readonly allowedIpAddresses: string[];
@@ -16,7 +16,7 @@ export class WafStack extends cdk.Stack {
       description: `WAF stack for Sandbox`,
     });
 
-    const wafConstruct = new WafConstruct(this, "Waf", {
+    const wafConstruct = new WafConstruct(this, 'Waf', {
       allowedIpAddresses: props.allowedIpAddresses,
       allowedIpv6Addresses: props.allowedIpv6Addresses,
     });

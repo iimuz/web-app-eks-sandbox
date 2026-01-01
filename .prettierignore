@@ -1,0 +1,3 @@
+awscdk/cdk.out/
+console/dist/
+pnpm-lock.yaml

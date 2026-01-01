@@ -1,7 +1,9 @@
+/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 function handler(event) {
   var request = event.request;
   var authHeaders = request.headers.authorization;
-  var expected = "Basic " + "dXNlcjpwYXNz"; // user:pass base64 encoded
+  // cspell:disable-next-line
+  var expected = 'Basic ' + 'dXNlcjpwYXNz'; // user:pass base64 encoded
 
   if (authHeaders && authHeaders.value === expected) {
     return request;
@@ -9,9 +11,9 @@ function handler(event) {
 
   return {
     statusCode: 401,
-    statusDescription: "Unauthorized",
+    statusDescription: 'Unauthorized',
     headers: {
-      "www-authenticate": { value: "Basic realm=\"Access to Console\"" }
-    }
+      'www-authenticate': { value: 'Basic realm="Access to Console"' },
+    },
   };
 }

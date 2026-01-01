@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #MISE description="Cleanup repository settings."
 
-set -Eeuo pipefail
+set -E -e -u -o pipefail
 
 SCRIPT_NAME=$(basename "${0}")
 readonly SCRIPT_NAME
@@ -73,6 +73,8 @@ function main() {
       ;;
     esac
   done
+
+  rm -r node_modules/
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then

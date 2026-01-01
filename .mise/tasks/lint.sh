@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#MISE description="Setup repository settings."
+#MISE description="Run linters and format checks."
 
 set -E -e -u -o pipefail
 
@@ -41,21 +41,20 @@ function usage() {
 Usage: ${SCRIPT_NAME} [OPTIONS]
 
 Description:
-    Setup repository settings.
+    Run linters and format checks.
 
 OPTIONS:
     -h, --help      Show this help message
     -v, --verbose   Enable verbose output (set -x)
 
 EXAMPLES:
-    ${SCRIPT_NAME}              # Run full setup
+    ${SCRIPT_NAME}              # Run linters and format checks
     ${SCRIPT_NAME} --verbose    # Run with verbose output
     ${SCRIPT_NAME} --help       # Show this help
 EOF
 }
 
 function main() {
-  # Parse command line arguments
   while [[ $# -gt 0 ]]; do
     case $1 in
     -h | --help)
@@ -74,8 +73,16 @@ function main() {
     esac
   done
 
-  pnpm install --frozen-lockfile
-  pnpm exec lefthook install
+  pnpm exec eslint .
+  pnpm exec prettier --check '**/*.{js,json,jsonc,jsonl,md,mjs,toml,ts,tsx,yml,yaml}'
+  find . -name "*.sh" -type f \
+    ! -path "**/node_modules/*" \
+    -exec pnpm exec shellcheck -x {} +
+  pnpm exec cspell lint . --no-progress
+
+  # 各 workspace のチェック実行
+  mise run -C awscdk lint
+  mise run -C console lint
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then

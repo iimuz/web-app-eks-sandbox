@@ -1,0 +1,28 @@
+{
+  "words": ["avenir", "awscdk", "iimuz", "rsbuild", "rspack"],
+  "ignoreWords": [],
+  "flagWords": [],
+  "allowCompoundWords": true,
+  "dictionaries": [
+    "bash",
+    "companies",
+    "css",
+    "en_US",
+    "filetypes",
+    "fonts",
+    "html",
+    "misc",
+    "node",
+    "npm",
+    "softwareTerms",
+    "typescript"
+  ],
+  "ignorePaths": [
+    "**/.gitignore",
+    "**/cdk.out/",
+    "**/dist/",
+    "**/node_modules/",
+    "**/package.json",
+    "**/pnpm-lock.yaml"
+  ]
+}

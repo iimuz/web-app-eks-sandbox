@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-#MISE description="Run docker."
+#MISE description="Run the build using rsbuild."
 
-set -Eeuo pipefail
+set -E -e -u -o pipefail
 
 SCRIPT_NAME=$(basename "${0}")
 readonly SCRIPT_NAME
@@ -41,51 +41,22 @@ function usage() {
 Usage: ${SCRIPT_NAME} [OPTIONS]
 
 Description:
-    Run docker.
+    Run the build using rsbuild.
 
 OPTIONS:
     -h, --help      Show this help message
     -v, --verbose   Enable verbose output (set -x)
 
 EXAMPLES:
-    ${SCRIPT_NAME}              # Run docker
+    ${SCRIPT_NAME}              # Run linters and format checks
     ${SCRIPT_NAME} --verbose    # Run with verbose output
     ${SCRIPT_NAME} --help       # Show this help
 EOF
 }
 
 function main() {
-  local USER_UID=1000
-  local USER_GID=1000
-  if [[ "$(uname -s)" == "Linux" ]]; then
-    USER_UID=$(id -u)
-    USER_GID=$(id -g)
-  fi
-  readonly USER_UID
-  readonly USER_GID
-
-  # docker composeのベースコマンド
-  local -ar ENV_VARS=(
-    "USER_UID=$USER_UID"
-    "USER_GID=$USER_GID"
-    "GITHUB_TOKEN=$(gh auth token 2>/dev/null || echo '')"
-  )
-  local -r DOCKER_BASE_CMD=(
-    env "${ENV_VARS[@]}"
-    docker compose
-    --project-directory "$PWD"
-  )
-
   while [[ $# -gt 0 ]]; do
     case $1 in
-    build)
-      "${DOCKER_BASE_CMD[@]}" --profile dev build
-      break
-      ;;
-    shell)
-      "${DOCKER_BASE_CMD[@]}" run --rm -it dev bash
-      break
-      ;;
     -h | --help)
       usage
       exit 0
@@ -95,12 +66,14 @@ function main() {
       shift
       ;;
     *)
-      log_error "Unknown option: $1"
+      echo "[ERROR] Unknown option: $1" >&2
       usage
       exit 1
       ;;
     esac
   done
+
+  pnpm exec rsbuild build
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then

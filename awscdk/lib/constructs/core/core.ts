@@ -1,5 +1,5 @@
-import * as path from "path";
-import * as cdk from "aws-cdk-lib";
+import * as path from 'path';
+import * as cdk from 'aws-cdk-lib';
 import {
   Distribution,
   ViewerProtocolPolicy,
@@ -7,11 +7,11 @@ import {
   Function,
   FunctionCode,
   FunctionEventType,
-} from "aws-cdk-lib/aws-cloudfront";
-import * as origins from "aws-cdk-lib/aws-cloudfront-origins";
-import * as s3 from "aws-cdk-lib/aws-s3";
-import * as ssm from "aws-cdk-lib/aws-ssm";
-import { Construct } from "constructs";
+} from 'aws-cdk-lib/aws-cloudfront';
+import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
+import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as ssm from 'aws-cdk-lib/aws-ssm';
+import { Construct } from 'constructs';
 
 export interface CoreConstructProps {
   readonly consoleBucket: s3.IBucket;
@@ -25,24 +25,27 @@ export class CoreConstruct extends Construct {
     const { consoleBucket, webAclArn } = props;
     const stackName = cdk.Stack.of(this).stackName;
 
-    const basicAuthFunction = new Function(this, "BasicAuthFunction", {
+    const basicAuthFunction = new Function(this, 'BasicAuthFunction', {
       code: FunctionCode.fromFile({
-        filePath: path.join(__dirname, "../../../assets/functions/basic-auth.js"),
+        filePath: path.join(
+          __dirname,
+          '../../../assets/functions/basic-auth.js'
+        ),
       }),
     });
 
     // ========================================
     // CloudFront Distribution
     // ========================================
-    const distribution = new Distribution(this, "Distribution", {
+    const distribution = new Distribution(this, 'Distribution', {
       comment: `Distribution for ${stackName}`,
-      defaultRootObject: "index.html",
+      defaultRootObject: 'index.html',
       defaultBehavior: {
         origin: origins.S3BucketOrigin.withOriginAccessControl(consoleBucket),
         viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
       },
       additionalBehaviors: {
-        "/console*": {
+        '/console*': {
           origin: origins.S3BucketOrigin.withOriginAccessControl(consoleBucket),
           viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
           allowedMethods: AllowedMethods.ALLOW_GET_HEAD,
@@ -58,12 +61,12 @@ export class CoreConstruct extends Construct {
         {
           httpStatus: 403,
           responseHttpStatus: 200,
-          responsePagePath: "/console/index.html",
+          responsePagePath: '/console/index.html',
         },
         {
           httpStatus: 404,
           responseHttpStatus: 200,
-          responsePagePath: "/console/index.html",
+          responsePagePath: '/console/index.html',
         },
       ],
       webAclId: webAclArn,
@@ -72,18 +75,18 @@ export class CoreConstruct extends Construct {
     // ========================================
     // Outputs
     // ========================================
-    new cdk.CfnOutput(this, "DistributionId", {
+    new cdk.CfnOutput(this, 'DistributionId', {
       value: distribution.distributionId,
     });
-    new cdk.CfnOutput(this, "DistributionDomainName", {
+    new cdk.CfnOutput(this, 'DistributionDomainName', {
       value: distribution.distributionDomainName,
     });
-    new cdk.CfnOutput(this, "WebsiteURL", {
+    new cdk.CfnOutput(this, 'WebsiteURL', {
       value: `https://${distribution.distributionDomainName}`,
     });
 
-    const stageName = cdk.Stage.of(this)?.stageName.toLowerCase() || "dev";
-    new ssm.StringParameter(this, "DistributionIdParam", {
+    const stageName = cdk.Stage.of(this)?.stageName.toLowerCase() || 'dev';
+    new ssm.StringParameter(this, 'DistributionIdParam', {
       parameterName: `/${stageName}/service/console/distribution-id`,
       stringValue: distribution.distributionId,
     });

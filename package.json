@@ -3,14 +3,19 @@
   "version": "1.0.0",
   "private": true,
   "description": "Experimental environment for web app infrastructure on AWS EKS",
-  "workspaces": ["awscdk", "console"],
-  "scripts": {
-    "build": "npm run build --workspace=console",
-    "dev": "npm run dev --workspace=console",
-    "deploy": "npm run deploy --workspace=awscdk",
-    "diff": "npm run diff --workspace=awscdk",
-    "synth": "npm run synth --workspace=awscdk"
-  },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.3",
+    "@eslint/js": "^9.39.2",
+    "cspell": "^9.4.0",
+    "eslint": "^9.39.2",
+    "globals": "^16.5.0",
+    "lefthook": "^2.0.13",
+    "prettier": "^3.7.4",
+    "prettier-plugin-toml": "^2.0.6",
+    "shellcheck": "^4.1.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.50.1"
+  }
 }

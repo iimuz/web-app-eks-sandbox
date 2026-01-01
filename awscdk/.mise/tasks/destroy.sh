@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#MISE description="Setup repository settings."
+#MISE description="Destroy AWS CDK stacks."
 
 set -E -e -u -o pipefail
 
@@ -41,21 +41,20 @@ function usage() {
 Usage: ${SCRIPT_NAME} [OPTIONS]
 
 Description:
-    Setup repository settings.
+    Destroy AWS CDK stacks.
 
 OPTIONS:
     -h, --help      Show this help message
     -v, --verbose   Enable verbose output (set -x)
 
 EXAMPLES:
-    ${SCRIPT_NAME}              # Run full setup
-    ${SCRIPT_NAME} --verbose    # Run with verbose output
+    ${SCRIPT_NAME}              # Destroy stacks
+    ${SCRIPT_NAME} --verbose    # Destroy with verbose output
     ${SCRIPT_NAME} --help       # Show this help
 EOF
 }
 
 function main() {
-  # Parse command line arguments
   while [[ $# -gt 0 ]]; do
     case $1 in
     -h | --help)
@@ -74,8 +73,7 @@ function main() {
     esac
   done
 
-  pnpm install --frozen-lockfile
-  pnpm exec lefthook install
+  pnpm exec cdk destroy
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
