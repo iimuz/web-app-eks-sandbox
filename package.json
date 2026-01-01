@@ -4,6 +4,7 @@
   "private": true,
   "description": "Experimental environment for web app infrastructure on AWS EKS",
   "scripts": {
+    "lint": "eslint .",
     "build": "pnpm --filter console build",
     "dev": "pnpm --filter console dev",
     "deploy": "pnpm --filter awscdk deploy",
@@ -11,5 +12,15 @@
     "synth": "pnpm --filter awscdk synth"
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.3",
+    "@eslint/js": "^9.39.2",
+    "cspell": "^9.4.0",
+    "eslint": "^9.39.2",
+    "globals": "^16.5.0",
+    "prettier": "^3.7.4",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.50.1"
+  }
 }

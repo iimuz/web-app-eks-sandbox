@@ -1,0 +1,14 @@
+{
+  "words": [],
+  "ignoreWords": [],
+  "flagWords": [],
+  "allowCompoundWords": true,
+  "ignorePaths": [
+    "**/.gitignore",
+    "**/cdk.out/",
+    "**/dist/",
+    "**/node_modules/",
+    "**/package.json",
+    "**/pnpm-lock.yaml"
+  ]
+}
