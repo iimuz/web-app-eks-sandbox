@@ -1,29 +1,4 @@
 services:
-  dev:
-    image: web-app-eks-sandbox-base:latest
-    build:
-      context: ./docker/base
-      dockerfile: Dockerfile
-      args:
-        - UID=${USER_UID:-1000}
-        - GID=${USER_GID:-1000}
-    volumes:
-      - $PWD:/workspace
-      - cache-node:/workspace/node_modules
-      - cache-mise:/home/ubuntu/.cache/mise
-      - $PWD//.aws:/home/ubuntu/.aws:ro
-    environment:
-      - GITHUB_TOKEN=${GITHUB_TOKEN:-""}
-      - MISE_TRUSTED_CONFIG_PATHS=/workspace
-    networks:
-      - public_net
-    working_dir: /workspace
-    user: ubuntu
-    profiles:
-      - dev
-    tty: true
-    stdin_open: true
-
   traefik:
     image: traefik:v3.6.4
     command:
@@ -40,26 +15,19 @@ services:
       - internal_net
 
   console:
-    image: web-app-eks-sandbox-base:latest
-    working_dir: /workspace/console
-    command: npm run dev
+    image: nginx:alpine
     volumes:
-      - .:/workspace
-      - cache-node:/workspace/node_modules
+      - ./console/dist:/usr/share/nginx/html:ro
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.console.rule=Host(`localhost`)"
       - "traefik.http.routers.console.entrypoints=web"
-      - "traefik.http.services.console.loadbalancer.server.port=3000"
+      - "traefik.http.services.console.loadbalancer.server.port=80"
       - "traefik.docker.network=internal_net"
+      - "traefik.http.middlewares.console-strip.stripprefix.prefixes=/console"
+      - "traefik.http.routers.console.middlewares=console-strip@docker"
     networks:
       - internal_net
-    user: ubuntu
-
-volumes:
-  # cache
-  cache-mise:
-  cache-node:
 
 networks:
   public_net:
