@@ -4,7 +4,6 @@
   "private": true,
   "description": "Experimental environment for web app infrastructure on AWS EKS",
   "scripts": {
-    "lint": "eslint .",
     "build": "pnpm --filter console build",
     "dev": "pnpm --filter console dev",
     "deploy": "pnpm --filter awscdk deploy",
@@ -20,6 +19,8 @@
     "eslint": "^9.39.2",
     "globals": "^16.5.0",
     "prettier": "^3.7.4",
+    "prettier-plugin-toml": "^2.0.6",
+    "shellcheck": "^4.1.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.50.1"
   }

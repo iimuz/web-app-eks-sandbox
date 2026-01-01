@@ -3,7 +3,7 @@
   "trailingComma": "es5",
   "singleQuote": true,
   "tabWidth": 2,
-  "plugins": [],
+  "plugins": ["prettier-plugin-toml"],
   "overrides": [
     {
       "files": ["*.yml", "*.yaml"],
