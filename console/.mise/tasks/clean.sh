@@ -74,6 +74,7 @@ function main() {
     esac
   done
 
+  rm -r dist/
   rm -r node_modules/
 }
 

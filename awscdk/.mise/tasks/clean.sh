@@ -74,6 +74,7 @@ function main() {
     esac
   done
 
+  rm -r cdk.out/
   rm -r node_modules/
 }
 

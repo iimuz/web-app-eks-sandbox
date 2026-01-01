@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #MISE description="Run formatting and normalization tasks."
 
-set -Eeuo pipefail
+set -E -e -u -o pipefail
 
 SCRIPT_NAME=$(basename "${0}")
 readonly SCRIPT_NAME

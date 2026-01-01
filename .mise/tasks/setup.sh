@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #MISE description="Setup repository settings."
 
-set -Eeuo pipefail
+set -E -e -u -o pipefail
 
 SCRIPT_NAME=$(basename "${0}")
 readonly SCRIPT_NAME
@@ -75,6 +75,7 @@ function main() {
   done
 
   pnpm install --frozen-lockfile
+  pnpm exec lefthook install
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
