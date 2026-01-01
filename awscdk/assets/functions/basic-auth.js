@@ -2,6 +2,7 @@
 function handler(event) {
   var request = event.request;
   var authHeaders = request.headers.authorization;
+  // cspell:disable-next-line
   var expected = 'Basic ' + 'dXNlcjpwYXNz'; // user:pass base64 encoded
 
   if (authHeaders && authHeaders.value === expected) {

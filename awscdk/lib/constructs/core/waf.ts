@@ -1,6 +1,6 @@
-import * as cdk from "aws-cdk-lib";
-import * as wafv2 from "aws-cdk-lib/aws-wafv2";
-import { Construct } from "constructs";
+import * as cdk from 'aws-cdk-lib';
+import * as wafv2 from 'aws-cdk-lib/aws-wafv2';
+import { Construct } from 'constructs';
 
 export interface WafConstructProps {
   readonly allowedIpAddresses: string[];
@@ -20,20 +20,20 @@ export class WafConstruct extends Construct {
     // ========================================
     const ipSet =
       props.allowedIpAddresses.length > 0
-        ? new wafv2.CfnIPSet(this, "AllowedIPSet", {
+        ? new wafv2.CfnIPSet(this, 'AllowedIPSet', {
             name: `${stackName}-allowed-ips`,
-            scope: "CLOUDFRONT",
-            ipAddressVersion: "IPV4",
+            scope: 'CLOUDFRONT',
+            ipAddressVersion: 'IPV4',
             addresses: props.allowedIpAddresses,
           })
         : undefined;
 
     const ipSetV6 =
       props.allowedIpv6Addresses.length > 0
-        ? new wafv2.CfnIPSet(this, "AllowedIPSetV6", {
+        ? new wafv2.CfnIPSet(this, 'AllowedIPSetV6', {
             name: `${stackName}-allowed-ips-v6`,
-            scope: "CLOUDFRONT",
-            ipAddressVersion: "IPV6",
+            scope: 'CLOUDFRONT',
+            ipAddressVersion: 'IPV6',
             addresses: props.allowedIpv6Addresses,
           })
         : undefined;
@@ -47,15 +47,15 @@ export class WafConstruct extends Construct {
       ipStatements.push({ ipSetReferenceStatement: { arn: ipSetV6.attrArn } });
     }
 
-    const webAcl = new wafv2.CfnWebACL(this, "WebACL", {
+    const webAcl = new wafv2.CfnWebACL(this, 'WebACL', {
       name: `${stackName}-webacl`,
-      scope: "CLOUDFRONT",
+      scope: 'CLOUDFRONT',
       defaultAction: { block: {} },
       rules:
         ipStatements.length > 0
           ? [
               {
-                name: "AllowWhitelistedIPs",
+                name: 'AllowWhitelistedIPs',
                 priority: 1,
                 statement:
                   ipStatements.length === 1
@@ -65,7 +65,7 @@ export class WafConstruct extends Construct {
                 visibilityConfig: {
                   sampledRequestsEnabled: true,
                   cloudWatchMetricsEnabled: true,
-                  metricName: "AllowWhitelistedIPsRule",
+                  metricName: 'AllowWhitelistedIPsRule',
                 },
               },
             ]

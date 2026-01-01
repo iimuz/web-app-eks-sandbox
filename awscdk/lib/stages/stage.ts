@@ -1,7 +1,7 @@
-import * as cdk from "aws-cdk-lib";
-import { Construct } from "constructs";
-import { ServiceStack } from "@/lib/stacks/service";
-import { WafStack } from "@/lib/stacks/waf";
+import * as cdk from 'aws-cdk-lib';
+import { Construct } from 'constructs';
+import { ServiceStack } from '@/lib/stacks/service';
+import { WafStack } from '@/lib/stacks/waf';
 
 export interface SandboxStageProps extends cdk.StackProps {
   readonly allowedIpAddresses: string[];
@@ -12,9 +12,9 @@ export class SandboxStage extends cdk.Stage {
   constructor(scope: Construct, id: string, props: SandboxStageProps) {
     super(scope, id, props);
 
-    const wafStack = new WafStack(this, "Waf", {
+    const wafStack = new WafStack(this, 'Waf', {
       env: {
-        region: "us-east-1",
+        region: 'us-east-1',
         account: props.env?.account,
       },
       crossRegionReferences: true,
@@ -22,7 +22,7 @@ export class SandboxStage extends cdk.Stage {
       allowedIpv6Addresses: props.allowedIpv6Addresses,
     });
 
-    new ServiceStack(this, "Service", {
+    new ServiceStack(this, 'Service', {
       env: props.env,
       crossRegionReferences: true,
       webAclArn: wafStack.webAclArn,
