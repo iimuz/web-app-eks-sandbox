@@ -74,24 +74,6 @@ function main() {
   done
 
   pnpm exec eslint --fix .
-  pnpm exec prettier --write '**/*.{js,json,jsonc,jsonl,md,mjs,toml,ts,tsx,yml,yaml}'
-
-  find . -name "*.sh" -type f \
-    ! -path "**/node_modules/*" \
-    -exec shfmt -w -l {} +
-
-  # Normalize cspell words: lowercase, sort, unique
-  jq '.words |= (
-    map(ascii_downcase) |
-    sort |
-    unique
-  )' cspell.json >cspell.json.tmp &&
-    mv cspell.json.tmp cspell.json
-  pnpm exec prettier --write 'cspell.json'
-
-  # 各 workspace の実行
-  mise run -C awscdk format
-  mise run -C console format
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then

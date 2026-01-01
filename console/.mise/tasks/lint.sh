@@ -74,6 +74,7 @@ function main() {
   done
 
   pnpm exec eslint .
+  pnpm exec npx tsc --noEmit
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then

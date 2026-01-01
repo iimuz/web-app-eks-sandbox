@@ -60,3 +60,11 @@ pre-commit:
             run: shellcheck {staged_files}
           - name: spell check
             run: pnpm exec cspell lint --no-must-find-files --no-progress {staged_files}
+          - name: tsc - awscdk
+            root: awscdk/
+            glob: "*.ts"
+            run: npx tsc --noEmit
+          - name: tsc - console
+            root: console/
+            glob: "*.ts"
+            run: npx tsc --noEmit
